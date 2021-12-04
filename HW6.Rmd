@@ -47,3 +47,17 @@ birthweight_df =
   
 ```
 
+The birth_df is the cleaned dataset. 
+
+* Fit a regression model 
+
+Since the outcome variable is birthweight, we might be interested in looking at baby's sex and it's head circumference as well as it's length at birth. We also want to see the parental effect like father and mother's races and mother's height on baby's weight. 
+
+```{r}
+fit <- lm(bwt ~ babysex + bhead + blength + mheight + gaweeks + mrace + frace, data = birthweight_df)
+
+fit %>% broom::tidy()
+```
+
+
+
