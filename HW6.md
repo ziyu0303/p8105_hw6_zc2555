@@ -24,10 +24,39 @@ library(tidyverse)
 library(modelr)
 ```
 
+# Problem 1, Clean the dataset, recode certain variables into factors
+
+-   As we can see that variables: babyset, frace, malform, mrace are
+    categorical data so we need to tranform them into factors.
+
 ``` r
 birthweight_df = 
   read_csv("data/birthweight.csv") %>%
-  janitor::clean_names()
+  janitor::clean_names() %>%
+  mutate(
+    babysex = recode_factor(
+      as_factor(babysex), 
+      "1" = "male",
+      "2" = "female"),
+    frace = recode_factor(
+      as_factor(frace), 
+      "1" = "White", 
+      "2" = "Black", 
+      "3" = "Asian", 
+      "4" = "Puerto Rican", 
+      "8" = "Other", 
+      "9" = "Unknown"),
+     malform = recode_factor(
+       as_factor(malform), 
+       "1" = "present", 
+       "0" = "absent"),
+     mrace = recode_factor(
+       as_factor(mrace), 
+       "1" = "White", 
+       "2" = "Black", 
+       "3" = "Asian", 
+       "4" = "Puerto Rican", 
+       "8" = "Other"))
 ```
 
     ## Rows: 4342 Columns: 20
