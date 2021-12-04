@@ -1,0 +1,21 @@
+---
+title: "P8105_hw6_zc2555"
+author: "Ziyu Chen"
+date: "12/4/2021"
+output: github_document
+---
+
+# r set up, lodaing packages 
+```{r}
+library(tidyverse)
+library(modelr)
+
+```
+
+```{r}
+birthweight_df = 
+  read_csv("data/birthweight.csv") %>%
+  janitor::clean_names()
+  
+```
+
