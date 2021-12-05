@@ -145,7 +145,7 @@ at birth. We also want to see the parental effect like father and
 mother’s races and mother’s height on baby’s weight.
 
 ``` r
-fit <- lm(bwt ~ babysex + bhead + blength + mheight + gaweeks + mrace + frace, data = birthweight_df)
+fit = lm(bwt ~ babysex + bhead + blength + mheight + gaweeks + mrace + frace, data = birthweight_df)
 
 fit %>% broom::tidy()
 ```
@@ -183,7 +183,7 @@ that are not optimal, the overall model still looks good.
     predictors (main effects only)
 
 ``` r
-model_1 <- lm(bwt ~ blength + gaweeks, data = birthweight_df)
+model_1 = lm(bwt ~ blength + gaweeks, data = birthweight_df)
 
 model_1 %>% broom::tidy()
 ```
@@ -201,7 +201,7 @@ birth and gestational age are main effects, we also include gestational
 age in our model.)
 
 ``` r
-model_2 <- lm(bwt ~ bhead + blength + babysex + bhead*blength + blength*babysex + bhead*babysex + bhead*blength*babysex, data= birthweight_df)
+model_2 = lm(bwt ~ bhead + blength + babysex + bhead*blength + blength*babysex + bhead*babysex + bhead*blength*babysex, data= birthweight_df)
 
 model_2 %>% broom::tidy()
 ```
@@ -325,7 +325,7 @@ boot_strap =
 CI = quantile(pull(boot_strap,r.squared), probs = c(0.025, 0.975))  
 ```
 
-The mean is 0.91149, the CI is 0.8939303 0.9267355
+The mean is 0.911679, the CI is 0.8939303 0.9267355
 
 R^2 graph
 
@@ -354,7 +354,7 @@ log_df = weather_df %>%
   unnest(results)
 
 
-log = log_df %>%
+log_new = log_df %>%
   select(id, term, estimate) %>%
   pivot_wider(
     names_from = "term",
@@ -363,4 +363,22 @@ log = log_df %>%
   mutate(
     log = log(`(Intercept)` *tmin)
   )
+
+CI_2 = quantile(pull(log_new,log), probs = c(0.025, 0.975))
 ```
+
+The mean value of is 2.0131647. The CI is (1.9635709, 2.0590264).
+
+``` r
+log_new %>%
+ggplot(aes(x = log)) +
+  geom_density() +
+  labs(
+    title = "Distribution Log(beta0*beta1) estimates", 
+    y = "Density",
+     x = "Log(beta0*beta1)"
+  )
+```
+
+![](HW6_files/figure-gfm/unnamed-chunk-14-1.png)<!-- --> The
+distribution of log(beta0\*beta1) is also unimdal and it is symmetric
