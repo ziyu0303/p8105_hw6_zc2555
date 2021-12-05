@@ -135,14 +135,14 @@ Cross_validation %>%
     y = "RMSE"
   )
 ```
-
+From the violin graph above, we can see that model 2 are better in fitting.
 
 
 
 
 # Problem 2
 
-
+Run the provided code
 ```{r}
 weather_df = 
   rnoaa::meteo_pull_monitors(
@@ -156,3 +156,61 @@ weather_df =
     tmax = tmax / 10) %>%
   select(name, id, everything())
 ```
+* Use 5000 bootstrap samples and, for each bootstrap sample, produce estimates of these two quantities.
+
+```{r}
+boot_strap =
+ weather_df %>% 
+  modelr::bootstrap(n = 5000) %>% 
+  mutate(
+    models = map(strap, ~lm(tmax ~ tmin, data = .x) ),
+    results = map(models, broom::glance)) %>% 
+  select(-strap, -models) %>% 
+  unnest(results)
+
+CI = quantile(pull(boot_strap,r.squared), probs = c(0.025, 0.975))  
+
+```
+
+The mean is `r mean(pull(boot_strap,r.squared)) `, the CI  is 0.8939303 0.9267355 
+
+R^2 graph
+
+```{r}
+boot_strap %>%
+  ggplot(aes(x = r.squared)) +
+  geom_density() + 
+  labs(
+    title = "The distribution of R squared"
+  )
+```
+The distribution of r^2 is unimodal and approximately symmetric.
+
+
+
+* log(β_0∗β_1)
+
+```{r}
+log_df = weather_df %>% 
+  modelr::bootstrap(n = 5000) %>% 
+  mutate(
+    models = map(strap, ~lm(tmax ~ tmin, data = .x) ),
+    results = map(models, broom::tidy)) %>% 
+  select(-strap, -models) %>% 
+  janitor::clean_names() %>%
+  unnest(results)
+
+
+log = log_df %>%
+  select(id, term, estimate) %>%
+  pivot_wider(
+    names_from = "term",
+    values_from = "estimate"
+  ) %>%
+  mutate(
+    log = log(`(Intercept)` *tmin)
+  )
+
+```
+
+

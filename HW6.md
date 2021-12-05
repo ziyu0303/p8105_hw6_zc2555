@@ -278,9 +278,12 @@ Cross_validation %>%
   )
 ```
 
-![](HW6_files/figure-gfm/unnamed-chunk-9-1.png)<!-- -->
+![](HW6_files/figure-gfm/unnamed-chunk-9-1.png)<!-- --> From the violin
+graph above, we can see that model 2 are better in fitting.
 
 # Problem 2
+
+Run the provided code
 
 ``` r
 weather_df = 
@@ -305,3 +308,59 @@ weather_df =
     ## date created (size, mb): 2021-12-04 18:41:21 (7.616)
 
     ## file min/max dates: 1869-01-01 / 2021-12-31
+
+-   Use 5000 bootstrap samples and, for each bootstrap sample, produce
+    estimates of these two quantities.
+
+``` r
+boot_strap =
+ weather_df %>% 
+  modelr::bootstrap(n = 5000) %>% 
+  mutate(
+    models = map(strap, ~lm(tmax ~ tmin, data = .x) ),
+    results = map(models, broom::glance)) %>% 
+  select(-strap, -models) %>% 
+  unnest(results)
+
+CI = quantile(pull(boot_strap,r.squared), probs = c(0.025, 0.975))  
+```
+
+The mean is 0.91149, the CI is 0.8939303 0.9267355
+
+R^2 graph
+
+``` r
+boot_strap %>%
+  ggplot(aes(x = r.squared)) +
+  geom_density() + 
+  labs(
+    title = "The distribution of R squared"
+  )
+```
+
+![](HW6_files/figure-gfm/unnamed-chunk-12-1.png)<!-- --> The
+distribution of r^2 is unimodal and approximately symmetric.
+
+-   log(β\_0∗β\_1)
+
+``` r
+log_df = weather_df %>% 
+  modelr::bootstrap(n = 5000) %>% 
+  mutate(
+    models = map(strap, ~lm(tmax ~ tmin, data = .x) ),
+    results = map(models, broom::tidy)) %>% 
+  select(-strap, -models) %>% 
+  janitor::clean_names() %>%
+  unnest(results)
+
+
+log = log_df %>%
+  select(id, term, estimate) %>%
+  pivot_wider(
+    names_from = "term",
+    values_from = "estimate"
+  ) %>%
+  mutate(
+    log = log(`(Intercept)` *tmin)
+  )
+```
