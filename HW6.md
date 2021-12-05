@@ -135,7 +135,7 @@ map(birthweight_df, ~sum(is.na(.)))
     ## $wtgain
     ## [1] 0
 
-The birth\_df is the cleaned dataset.
+The birth\_df is the cleaned dataset and has no missing data.
 
 -   Fit a regression model
 
@@ -283,7 +283,7 @@ graph above, we can see that model 2 are better in fitting.
 
 # Problem 2
 
-Run the provided code
+-   Run the provided code
 
 ``` r
 weather_df = 
@@ -312,6 +312,8 @@ weather_df =
 -   Use 5000 bootstrap samples and, for each bootstrap sample, produce
     estimates of these two quantities.
 
+r square dataset
+
 ``` r
 boot_strap =
  weather_df %>% 
@@ -325,7 +327,7 @@ boot_strap =
 CI = quantile(pull(boot_strap,r.squared), probs = c(0.025, 0.975))  
 ```
 
-The mean is 0.911679, the CI is 0.8939303 0.9267355
+The mean is 0.9115039, the CI is 0.8939303 0.9267355
 
 R^2 graph
 
@@ -367,7 +369,9 @@ log_new = log_df %>%
 CI_2 = quantile(pull(log_new,log), probs = c(0.025, 0.975))
 ```
 
-The mean value of is 2.0131647. The CI is (1.9635709, 2.0590264).
+The mean value of is 2.0131631. The CI is (1.9635709, 2.0590264).
+
+-   Plot for log(β\_0∗β\_1)
 
 ``` r
 log_new %>%

@@ -48,11 +48,11 @@ birthweight_df =
 ```
 
 Check if there are any missing data
-```{r message = FALSE}
+```{r message=FALSE}
 map(birthweight_df, ~sum(is.na(.)))
 ```
 
-The birth_df is the cleaned dataset. 
+The birth_df is the cleaned dataset and has no missing data.
 
 * Fit a regression model 
 
@@ -140,9 +140,9 @@ From the violin graph above, we can see that model 2 are better in fitting.
 
 
 
-# Problem 2
+# Problem 2 
 
-Run the provided code
+* Run the provided code
 ```{r}
 weather_df = 
   rnoaa::meteo_pull_monitors(
@@ -158,6 +158,7 @@ weather_df =
 ```
 * Use 5000 bootstrap samples and, for each bootstrap sample, produce estimates of these two quantities.
 
+r square dataset
 ```{r}
 boot_strap =
  weather_df %>% 
@@ -174,7 +175,7 @@ CI = quantile(pull(boot_strap,r.squared), probs = c(0.025, 0.975))
 
 The mean is `r mean(pull(boot_strap,r.squared)) `, the CI  is 0.8939303 0.9267355 
 
-R^2 graph
+R^2 graph 
 
 ```{r}
 boot_strap %>%
@@ -215,6 +216,7 @@ CI_2 = quantile(pull(log_new,log), probs = c(0.025, 0.975))
 ```
 The mean value of is `r mean(pull(log_new,log)) `. The CI is (1.9635709, 2.0590264).
 
+* Plot for log(β_0∗β_1)
 ```{r}
 log_new %>%
 ggplot(aes(x = log)) +
